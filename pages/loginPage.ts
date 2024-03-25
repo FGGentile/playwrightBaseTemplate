@@ -21,30 +21,30 @@ export class LoginPage {
         this.invalidLoginMessage = page.getByTestId('login-form-error-message');
     }
 
-    async goTo() {
+    async goTo(): Promise<void> {
         await this.page.goto('/public/login');
     }
 
-    async fill(username: string, password: string) {
+    async fill(username: string, password: string): Promise<void> {
         await this.header.isVisible();
         await this.userNameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.loginButton.click();
     }
 
-    async login() {
+    async login(): Promise<void> {
         await this.goTo();
         await this.fill(process.env.userNameV as string, process.env.passwordV as string);
         await expect(this.orgNameProfile).toBeVisible()
         await expect(this.orgNameText).toBeVisible()
     }
 
-    async invalidLogin() {
+    async invalidLogin(): Promise<void> {
         await this.fill("invalidUs", "invalidPwd");
         await expect(this.invalidLoginMessage).toBeVisible();
     }
 
-    async validateUser(orgNaming: string) {
+    async validateUser(orgNaming: string): Promise<void> {
         await expect(this.orgNameText).toHaveText(orgNaming);
         await expect(this.orgNameProfile).toHaveText(orgNaming);
 

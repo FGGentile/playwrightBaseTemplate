@@ -1,7 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-
 export class createPerson {
 
     readonly page: Page;
@@ -37,6 +36,9 @@ export class createPerson {
     readonly pinInput: Locator;
     readonly pinButton: Locator;
     readonly acceptButton: Locator;
+    readonly callersTab: Locator;
+    readonly callersAddButton: Locator;
+    readonly modalHolder: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -71,12 +73,15 @@ export class createPerson {
         this.pinInput = page.getByTestId('person-org-create-form-input-pin');
         this.pinButton = page.getByTestId('person-org-create-form-button--generate-pin')
         this.acceptButton = page.getByTestId('form-message-button-accept')
+        this.callersTab = page.getByTestId('organization-detail-tab-organization.callers');
+        this.modalHolder = page.getByTestId('create-modal-body-holder')
     }
 
 
-    async createRecipient() {
-        const personName = faker.person.firstName();
+    async createRecipient(): Promise<void> {
+        const personName: string = faker.person.firstName();
         await this.createPersonButton.click();
+        await this.modalHolder.isVisible();
         await this.firstNameInput.fill(personName);
         await this.lastNameInput.fill(faker.person.lastName());
         await this.preferredNameInput.fill(faker.person.middleName());
@@ -101,6 +106,45 @@ export class createPerson {
         await this.primaryPhoneInput.clear()
         await this.primaryPhoneInput.fill('13105043446')
         await this.primaryPhoneTypeMobileInput.click();
+        await this.alternatePhoneInput.clear()
+        await this.alternatePhoneInput.fill('13105043446')
+        await this.alternatePhoneTypeLandlineInput.click();
+        await this.externalPersonIdInput.fill(faker.internet.userName())
+        await this.submitButton.click()
+        await this.acceptButton.click()
+        await this.page.getByText(personName).isVisible()
+    }
+
+    async createCaller(): Promise<void> {
+        await this.callersTab.click();
+        const personName: string = faker.person.firstName();
+        await this.createPersonButton.click();
+        await this.modalHolder.isVisible();
+        await this.firstNameInput.fill(personName);
+        await this.lastNameInput.fill(faker.person.lastName());
+        await this.preferredNameInput.fill(faker.person.middleName());
+        await this.emailInput.fill(faker.internet.email());
+        await this.birthDateInput.fill('06/16/1995');
+        await this.birthDateInput.press('Enter');
+        await this.zipCodeInput.fill(faker.location.zipCode());
+        await this.genderInput.click();
+        await this.genderSelection.click();
+        await this.programInput.fill(faker.helpers.arrayElement(['RSVP', 'Friends/Social Call']));
+        await this.programInput.press('Enter');
+        await this.prefferedLanguageInput.fill(faker.helpers.arrayElement(['English', 'Spanish']));
+        await this.prefferedLanguageInput.press('Enter');
+        await this.hobbiesTextArea.fill(faker.lorem.words(10));
+        await this.voiceMethodInput.click();
+        await this.statusInput.fill(faker.helpers.arrayElement(['Accepted', 'Declined']));
+        await this.statusInput.press('Enter');
+        await this.callerBehaviorInput.fill(faker.helpers.arrayElement(['Talkative', 'Somewhat Talkative', 'Not Very Talkative']));
+        await this.callerBehaviorInput.press('Enter');
+        await this.timeForCallInput.fill(faker.helpers.arrayElement(['Morning', 'Afternoon', 'Evening']));
+        await this.timeForCallInput.press('Enter');
+        await this.primaryPhoneInput.clear()
+        await this.primaryPhoneInput.fill('13105043446')
+        await this.primaryPhoneTypeMobileInput.click();
+        await this.pinButton.click()
         await this.alternatePhoneInput.clear()
         await this.alternatePhoneInput.fill('13105043446')
         await this.alternatePhoneTypeLandlineInput.click();

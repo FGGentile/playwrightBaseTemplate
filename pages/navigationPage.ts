@@ -19,57 +19,56 @@ export class NavigationPage {
         this.outreachLink = page.getByTestId('navbar-leftbar-navlink-outreach');
         this.callAnalyticsLink = page.getByTestId('navbar-leftbar-navlink-call-analytics');
         this.myAccountLink = page.getByTestId('navbar-leftbar-navlink-my-account');
-    };
+    }
 
-    async validateUrl(section) {
+    async validateUrl(section: string): Promise<void> {
         const url = this.page.url();
-
         const path = new URL(url).pathname;
+        expect(path).toContain(section);
+    }
 
-        expect(path).toContain(section)
-    };
-    async navigateToNotes() {
+    async navigateToNotes(): Promise<void> {
         await this.notesLink.click({timeout: 10000});
-        this.validateUrl('notes')
-    };
+        await this.validateUrl('notes');
+    }
 
-    async navigateToBroadcast() {
+    async navigateToBroadcast(): Promise<void> {
         await this.broadcastLink.click();
-        this.validateUrl('broadcast')
-    };
+        await this.validateUrl('broadcast');
+    }
 
-    async navigateToCallLogs() {
+    async navigateToCallLogs(): Promise<void> {
         await this.callLogsLink.click();
-        this.validateUrl('call-logs')
-    };
+        await this.validateUrl('call-logs');
+    }
 
-    async navigateToSurveys() {
+    async navigateToSurveys(): Promise<void> {
         await this.surveysLink.click();
-        this.validateUrl('surveys')
-    };
+        await this.validateUrl('surveys');
+    }
 
-    async navigateToOutreach() {
+    async navigateToOutreach(): Promise<void> {
         await this.outreachLink.click();
-        this.validateUrl('outreachQueues')
-    };
+        await this.validateUrl('outreachQueues');
+    }
 
-    async navigateToCallAnalytics() {
+    async navigateToCallAnalytics(): Promise<void> {
         await this.callAnalyticsLink.click();
-        this.validateUrl('call-analytics')
+        await this.validateUrl('call-analytics');
     }
 
-    async navigateToMyAccount() {
+    async navigateToMyAccount(): Promise<void> {
         await this.myAccountLink.click();
-        this.validateUrl('account')
+        await this.validateUrl('account');
     }
 
-    async navigateAllSections(){
-       await this.navigateToNotes();
-       await this.navigateToBroadcast();
-       await this.navigateToCallLogs();
-       await this.navigateToSurveys();
-       await this.navigateToOutreach();
-       await this.navigateToCallAnalytics();
-       await this.navigateToMyAccount();
+    async navigateAllSections(): Promise<void> {
+        await this.navigateToNotes();
+        await this.navigateToBroadcast();
+        await this.navigateToCallLogs();
+        await this.navigateToSurveys();
+        await this.navigateToOutreach();
+        await this.navigateToCallAnalytics();
+        await this.navigateToMyAccount();
     }
-};
+}
